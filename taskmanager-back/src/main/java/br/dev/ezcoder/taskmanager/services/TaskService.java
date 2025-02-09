@@ -6,6 +6,7 @@ import br.dev.ezcoder.taskmanager.repositories.TaskRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskService {
@@ -22,5 +23,9 @@ public class TaskService {
 
     public List<TaskModel> findAllTasks() {
         return taskRepository.findAll();
+    }
+
+    public Optional<TaskModel> findTaskById(Long id) {
+        return taskRepository.findById(id);
     }
 }

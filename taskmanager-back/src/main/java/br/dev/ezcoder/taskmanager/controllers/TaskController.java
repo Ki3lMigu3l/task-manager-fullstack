@@ -8,10 +8,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -48,5 +48,18 @@ public class TaskController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(taskResponseDTOList.stream().toList());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getTaskById (@PathVariable Long id) {
+        var taskFind = taskService
+                .findTaskById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found!"));
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new TaskResponseDTO(
+                        taskFind.getTitle(),
+                        taskFind.getDescription(),
+                        taskFind.getCreatedAt()));
     }
 }
