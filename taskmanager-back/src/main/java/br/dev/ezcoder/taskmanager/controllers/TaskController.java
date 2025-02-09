@@ -1,5 +1,6 @@
 package br.dev.ezcoder.taskmanager.controllers;
 
+import br.dev.ezcoder.taskmanager.domain.tasks.TaskCreateResponseDTO;
 import br.dev.ezcoder.taskmanager.domain.tasks.TaskModel;
 import br.dev.ezcoder.taskmanager.domain.tasks.TaskRequestDTO;
 import br.dev.ezcoder.taskmanager.domain.tasks.TaskResponseDTO;
@@ -10,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -24,7 +25,7 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<TaskResponseDTO> createNewTask (@RequestBody TaskRequestDTO taskDto) {
+    public ResponseEntity<TaskCreateResponseDTO> createNewTask (@RequestBody TaskRequestDTO taskDto) {
         var newTask = new TaskModel();
         BeanUtils.copyProperties(taskDto, newTask);
         taskService.save(newTask);
@@ -32,22 +33,16 @@ public class TaskController {
         System.out.println(newTask.getCreatedAt());
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new TaskResponseDTO(
+                .body(new TaskCreateResponseDTO(
                         newTask.getTitle(),
                         newTask.getDescription(),
-                        newTask.getCreatedAt()));
+                        newTask.getCreatedAt()
+                ));
     }
 
     @GetMapping
-    public ResponseEntity<List<TaskResponseDTO>> getAllTasks () {
-        List<TaskModel> tasksList = taskService.findAllTasks();
-        List<TaskResponseDTO> taskResponseDTOList = new ArrayList<>();
-
-        for (TaskModel task : tasksList) {
-            taskResponseDTOList.add(new TaskResponseDTO(task.getTitle(), task.getDescription(), task.getCreatedAt()));
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(taskResponseDTOList.stream().toList());
+    public ResponseEntity<List<TaskModel>> getAllTasks () {
+        return ResponseEntity.status(HttpStatus.OK).body(taskService.findAllTasks());
     }
 
     @GetMapping("/{id}")
@@ -60,6 +55,40 @@ public class TaskController {
                 .body(new TaskResponseDTO(
                         taskFind.getTitle(),
                         taskFind.getDescription(),
-                        taskFind.getCreatedAt()));
+                        taskFind.getCreatedAt(),
+                        taskFind.getEdited(),
+                        taskFind.getDateEdited()));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteTask (@PathVariable Long id) {
+        var taskFind = taskService
+                .findTaskById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found!"));
+
+        taskService.delete(taskFind);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body("Task: " + taskFind.getTitle() + " deletada com sucesso!");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable Long id, @RequestBody TaskRequestDTO taskDto) {
+        var taskFind = taskService.findTaskById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
+
+        taskFind.setId(id);
+        taskFind.setTitle(taskDto.title());
+        taskFind.setDescription(taskDto.description());
+        taskFind.setEdited(true);
+        taskFind.setDateEdited(LocalDateTime.now());
+
+        taskService.save(taskFind);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new TaskResponseDTO(
+                taskFind.getTitle(),
+                taskFind.getDescription(),
+                taskFind.getCreatedAt(),
+                taskFind.getEdited(),
+                taskFind.getDateEdited()));
     }
 }

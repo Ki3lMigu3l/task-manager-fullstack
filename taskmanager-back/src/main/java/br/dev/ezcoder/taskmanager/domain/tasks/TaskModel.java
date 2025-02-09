@@ -17,15 +17,38 @@ public class TaskModel {
     private String description;
     @Column
     private LocalDateTime createdAt;
+    @Column
+    private Boolean isEdited;
+
+    @Column
+    private LocalDateTime dateEdited;
 
     public TaskModel () {
         this.createdAt = LocalDateTime.now();
+        this.isEdited = false;
     }
 
     public TaskModel (String title, String description) {
         this.title = title;
         this.description = description;
         this.createdAt = LocalDateTime.now();
+        this.isEdited = false;
+    }
+
+    public LocalDateTime getDateEdited() {
+        return dateEdited;
+    }
+
+    public void setDateEdited(LocalDateTime dateEdited) {
+        this.dateEdited = dateEdited;
+    }
+
+    public Boolean getEdited() {
+        return isEdited;
+    }
+
+    public void setEdited(Boolean edited) {
+        isEdited = edited;
     }
 
     public Long getId() {
