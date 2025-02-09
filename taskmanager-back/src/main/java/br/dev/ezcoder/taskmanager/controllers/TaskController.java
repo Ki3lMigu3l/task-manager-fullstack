@@ -7,10 +7,11 @@ import br.dev.ezcoder.taskmanager.services.TaskService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -35,5 +36,17 @@ public class TaskController {
                         newTask.getTitle(),
                         newTask.getDescription(),
                         newTask.getCreatedAt()));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TaskResponseDTO>> getAllTasks () {
+        List<TaskModel> tasksList = taskService.findAllTasks();
+        List<TaskResponseDTO> taskResponseDTOList = new ArrayList<>();
+
+        for (TaskModel task : tasksList) {
+            taskResponseDTOList.add(new TaskResponseDTO(task.getTitle(), task.getDescription(), task.getCreatedAt()));
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(taskResponseDTOList.stream().toList());
     }
 }
