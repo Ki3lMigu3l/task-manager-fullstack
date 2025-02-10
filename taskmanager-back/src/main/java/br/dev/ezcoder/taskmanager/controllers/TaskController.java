@@ -36,7 +36,9 @@ public class TaskController {
                 .body(new TaskCreateResponseDTO(
                         newTask.getTitle(),
                         newTask.getDescription(),
-                        newTask.getCreatedAt()
+                        newTask.getCreatedAt(),
+                        newTask.getStatus(),
+                        newTask.getCategories()
                 ));
     }
 
@@ -57,7 +59,9 @@ public class TaskController {
                         taskFind.getDescription(),
                         taskFind.getCreatedAt(),
                         taskFind.getEdited(),
-                        taskFind.getDateEdited()));
+                        taskFind.getDateEdited(),
+                        taskFind.getStatus(),
+                        taskFind.getCategories()));
     }
 
     @DeleteMapping("/{id}")
@@ -89,6 +93,8 @@ public class TaskController {
                 taskFind.getDescription(),
                 taskFind.getCreatedAt(),
                 taskFind.getEdited(),
-                taskFind.getDateEdited()));
+                taskFind.getDateEdited(),
+                taskFind.getStatus(),
+                taskFind.getCategories()));
     }
 }
