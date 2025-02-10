@@ -18,8 +18,4 @@ public class CategoryService {
     public CategoryModel saveCategory(CategoryModel categoryModel) {
         return categoryRepository.save(categoryModel);
     }
-
-    public Optional<CategoryModel> findCategoryByTitle(String title) {
-        return categoryRepository.findCategoryByTitle(title);
-    }
 }

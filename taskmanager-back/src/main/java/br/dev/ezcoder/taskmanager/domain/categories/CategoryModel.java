@@ -11,6 +11,7 @@ public class CategoryModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @Column
     private String title;
 

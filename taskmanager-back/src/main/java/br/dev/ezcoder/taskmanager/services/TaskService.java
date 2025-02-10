@@ -1,7 +1,6 @@
 package br.dev.ezcoder.taskmanager.services;
 
 import br.dev.ezcoder.taskmanager.domain.tasks.TaskModel;
-import br.dev.ezcoder.taskmanager.domain.tasks.TaskResponseDTO;
 import br.dev.ezcoder.taskmanager.repositories.TaskRepository;
 import org.springframework.stereotype.Service;
 
@@ -31,5 +30,9 @@ public class TaskService {
 
     public void delete(TaskModel taskFind) {
         taskRepository.delete(taskFind);
+    }
+
+    public Optional<TaskModel> findById(Long id) {
+        return taskRepository.findById(id);
     }
 }
