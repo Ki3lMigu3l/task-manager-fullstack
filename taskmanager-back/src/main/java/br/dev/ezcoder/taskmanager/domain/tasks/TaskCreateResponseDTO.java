@@ -11,4 +11,8 @@ public record TaskCreateResponseDTO(
         LocalDateTime createdAt,
         TaskStatus status,
         List<CategoryModel> categories) {
+
+    public TaskCreateResponseDTO (TaskModel taskModel) {
+        this(taskModel.getTitle(), taskModel.getDescription(), taskModel.getCreatedAt(), taskModel.getStatus(), taskModel.getCategories());
+    }
 }

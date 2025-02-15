@@ -13,4 +13,15 @@ public record TaskResponseDTO(
         LocalDateTime dateEdited,
         TaskStatus status,
         List<CategoryModel> categories) {
+
+    public TaskResponseDTO(TaskModel taskFind) {
+        this(
+                taskFind.getTitle(),
+                taskFind.getDescription(),
+                taskFind.getCreatedAt(),
+                taskFind.getEdited(),
+                taskFind.getDateEdited(),
+                taskFind.getStatus(),
+                taskFind.getCategories());
+    }
 }
