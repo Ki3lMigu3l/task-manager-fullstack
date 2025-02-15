@@ -29,18 +29,17 @@ public class CategoryController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<Object> createCategory (@PathVariable Long id, @RequestBody CategoryRequestDTO categoryDto) {
+    public ResponseEntity<CategoryResponseDTO> createCategory (@PathVariable Long id, @RequestBody CategoryRequestDTO categoryDto) {
         TaskModel task = taskService.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        
+        CategoryModel categoryModel = new CategoryModel();
+        BeanUtils.copyProperties(categoryDto, categoryModel);
+        categoryModel.setTaskModel(task);
+        categoryService.saveCategory(categoryModel);
 
-        CategoryModel category = new CategoryModel();
-        BeanUtils.copyProperties(categoryDto, category);
-
-        category.setTaskModel(task);
-        categoryService.saveCategory(category);
-
-        task.setCategories(category);
+        task.setCategories(categoryModel);
         taskService.save(task);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CategoryResponseDTO(category));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CategoryResponseDTO(categoryModel));
     }
 }

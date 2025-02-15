@@ -53,7 +53,7 @@ public class TaskController {
                 .findTaskById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found!"));
         taskService.delete(taskFind);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
