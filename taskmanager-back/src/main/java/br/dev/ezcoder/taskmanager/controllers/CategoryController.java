@@ -33,13 +33,14 @@ public class CategoryController {
         TaskModel task = taskService.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        CategoryModel categoryModel = new CategoryModel();
-        BeanUtils.copyProperties(categoryDto, categoryModel);
-        categoryModel.setTaskModel(task);
-        categoryService.saveCategory(categoryModel);
+        CategoryModel category = new CategoryModel();
+        BeanUtils.copyProperties(categoryDto, category);
 
-        task.setCategories(categoryModel);
+        category.setTaskModel(task);
+        categoryService.saveCategory(category);
+
+        task.setCategories(category);
         taskService.save(task);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CategoryResponseDTO(categoryModel.getTitle(), categoryModel.getTaskModel()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CategoryResponseDTO(category));
     }
 }
