@@ -1,6 +1,9 @@
 package br.dev.ezcoder.taskmanager.controllers;
 
-import br.dev.ezcoder.taskmanager.domain.tasks.*;
+import br.dev.ezcoder.taskmanager.domain.tasks.TaskCreateResponseDTO;
+import br.dev.ezcoder.taskmanager.domain.tasks.TaskModel;
+import br.dev.ezcoder.taskmanager.domain.tasks.TaskRequestDTO;
+import br.dev.ezcoder.taskmanager.domain.tasks.TaskResponseDTO;
 import br.dev.ezcoder.taskmanager.services.TaskService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -8,12 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/tasks")
+@CrossOrigin("*")
 public class TaskController {
 
     private final TaskService taskService;
