@@ -49,6 +49,14 @@ public class TaskController {
                 .body(new TaskResponseDTO(taskFind));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable Long id, @RequestBody TaskRequestDTO taskDto) {
+        var taskFind = taskService.findTaskById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
+
+        return ResponseEntity.status(HttpStatus.OK).body(taskService.updateTask(id, taskFind, taskDto));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity deleteTask (@PathVariable Long id) {
         var taskFind = taskService
@@ -56,13 +64,5 @@ public class TaskController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found!"));
         taskService.delete(taskFind);
         return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable Long id, @RequestBody TaskRequestDTO taskDto) {
-        var taskFind = taskService.findTaskById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
-
-        return ResponseEntity.status(HttpStatus.OK).body(taskService.updateTask(id, taskFind, taskDto));
     }
 }
